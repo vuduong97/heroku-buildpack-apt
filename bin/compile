@@ -127,45 +127,11 @@ export | grep -E -e ' (PATH|LD_LIBRARY_PATH|LIBRARY_PATH|INCLUDE_PATH|CPATH|CPPP
 topic "Rewrite package-config files"
 find $BUILD_DIR/.apt -type f -ipath '*/pkgconfig/*.pc' | xargs --no-run-if-empty -n 1 sed -i -e 's!^prefix=\(.*\)$!prefix='"$BUILD_DIR"'/.apt\1!g'
 
-set -e
+echo "-----> Tải xuống wkhtmltox_0.12.6.1-2.jammy_amd64.deb"
+wget "https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.jammy_amd64.deb"	
 
-BUILD_DIR=$1
-CACHE_DIR=$2
-
-BIN_PATH="$BUILD_DIR/bin"
-TMP_PATH="$BUILD_DIR/tmp"
-LIB_PATH="$BUILD_DIR/vendor/wkhtmltox/lib"
-mkdir -p $CACHE_DIR $BIN_PATH $TMP_PATH $LIB_PATH
-
-WKHTMLTOPDF_URL="https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.jammy_amd64.deb"
-WKHTMLTOPDF_PKG="$CACHE_DIR/wkhtmltopdf.deb"
-WKHTMLTOPDF_PATH="$TMP_PATH/wkhtmltopdf"
-WKHTMLTOPDF_BINARIES="$WKHTMLTOPDF_PATH/usr/local/bin"
-WKHTMLTOPDF_LIBS="$WKHTMLTOPDF_PATH/usr/local/lib"
-
-BIN_DIR=$(cd $(dirname $0); pwd)
-FONTS_DIR=$(cd "$BIN_DIR/../fonts"; pwd)
-
-echo "-----> Downloading wkhtmltopdf Debian package from ${WKHTMLTOPDF_URL}"
-curl -L $WKHTMLTOPDF_URL -o $WKHTMLTOPDF_PKG
-
-echo "-----> Unpacking Debian package"
-dpkg -x $WKHTMLTOPDF_PKG $WKHTMLTOPDF_PATH
-
-echo "-----> Setting permissions"
-chmod +x $WKHTMLTOPDF_BINARIES/*
-
-echo "-----> Moving binaries to the right place"
-mv $WKHTMLTOPDF_BINARIES/* $BIN_PATH/
-
-echo "-----> Moving libs to the right place"
-mv $WKHTMLTOPDF_LIBS/* $LIB_PATH/
-
-echo "-----> Removing wkhtmltoimage binary"
-rm -rf "$BIN_PATH/wkhtmltoimage"
-
-echo "-----> Cleaning up"
-rm -rf $WKHTMLTOPDF_PATH
+echo "-----> Cài đặt wkhtmltox_0.12.6.1-2.jammy_amd64.deb"
+dpkg -i "wkhtmltox_0.12.6.1-2.jammy_amd64.deb"
 
 # In ra phiên bản của wkhtmltopdf
 echo "-----> Vũ log nè: Wkhtmltopdf version: $(dpkg -I $WKHTMLTOPDF_PKG | grep Version)"
