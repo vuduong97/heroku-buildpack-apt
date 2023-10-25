@@ -152,26 +152,5 @@ curl -L $WKHTMLTOPDF_URL -o $WKHTMLTOPDF_PKG
 echo "-----> Unpacking Debian package"
 dpkg -x $WKHTMLTOPDF_PKG $WKHTMLTOPDF_PATH
 
-echo "-----> Setting permissions"
-chmod +x $WKHTMLTOPDF_BINARIES/*
-
-echo "-----> Moving binaries to the right place"
-mv $WKHTMLTOPDF_BINARIES/* $BIN_PATH/
-
-echo "-----> Moving libs to the right place"
-mv $WKHTMLTOPDF_LIBS/* $LIB_PATH/
-
-echo "-----> Removing wkhtmltoimage binary"
-rm -rf "$BIN_PATH/wkhtmltoimage"
-
-echo "-----> Cleaning up"
-rm -rf $WKHTMLTOPDF_PATH
-
-echo "-----> Installing fonts"
-mkdir -p $1/.fonts
-ls $FONTS_DIR
-cp $FONTS_DIR/* $1/.fonts/
-fc-cache -f $1/.fonts
-
 # In ra phiên bản của wkhtmltopdf
 echo "-----> Vũ log nè: Wkhtmltopdf version: $(dpkg -I $WKHTMLTOPDF_PKG | grep Version)"
